@@ -16,7 +16,8 @@ CPU_CFLAGS := -fomit-frame-pointer
 DEB_CFLAGS := -Wall -g
 DEF_CFLAGS :=
 USR_CFLAGS :=
-INC_CFLAGS := -I/usr/local/include/libepoll-shim
+#INC_CFLAGS := -I/usr/local/include/libepoll-shim
+INC_CFLAGS := 
 SSL_CFLAGS :=
 THR_CFLAGS := -pthread
 ifeq ($(USE_SSL),1)
@@ -31,7 +32,7 @@ DEB_LFLAGS := -g
 USR_LFLAGS :=
 LIB_LFLAGS :=
 ifeq ($(USE_SSL),1)
-SSL_LFLAGS := -lssl -lcrypto -lepoll-shim -L/usr/local/lib
+SSL_LFLAGS := -lssl -lcrypto
 else
 SSL_LFLAGS :=
 endif

@@ -25,6 +25,25 @@ freebsd()
 	fi
 }
 
+linux()
+{
+	for i in nginx build-essential libssl-dev; do
+		dpkg -s ${i} >/dev/null 2>&1 || apt-get install -y ${i}
+	done
+
+	# Включаем и сразу запускаем nginx
+	systemctl enable --now nginx
+
+	# Собираем и устанавливаем h1load
+	if [ ! -x /usr/local/bin/h1load ]; then
+		make -C ${progdir}/h1load
+		# В Linux флаг -m задает права, -s можно добавить для strip (очистки от отладочных символов)
+		install -m 0755 ${progdir}/h1load/h1load /usr/local/bin/h1load
+		# Очистка после сборки (в Linux make обычно поддерживает цель clean)
+		make -C ${progdir}/h1load clean || rm -f ${progdir}/h1load/h1load ${progdir}/h1load/*.o
+	fi
+}
+
 case "${PLATFORM}" in
 	FreeBSD)
 		freebsd

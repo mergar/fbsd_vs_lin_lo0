@@ -11,9 +11,6 @@ Warning! Не запускайте скрипты на системе котор
 
 На FreeBSD потребуется 'pkg install -y libepoll-shim':
 
-gmake -C h1load
-gmake -C h1load install
-
 ## Лабы
 
 Лаба 1 - HTTP RPS с nginx по loopback, одно ядро на каждый процесс
