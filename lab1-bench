@@ -12,24 +12,33 @@ mkdir ${progdir}/output
 
 init_cpuset_params()
 {
-	case ${CORES} in
-		1)
-			nginx_cpu=0
-			h1load_cpu=4
-			;;
-		2)
-			nginx_cpu="0-1"
-			h1load_cpu="4-5"
-			;;
-		3)
-			nginx_cpu="0-2"
-			h1load_cpu="4-6"
-			;;
-		4)
-			nginx_cpu="0-3"
-			h1load_cpu="4-7"
-			;;
-	esac
+	# Находим конечную точку для nginx
+	nginx_end=$((CORES - 1))
+
+	if [ "$nginx_end" -eq 0 ]; then
+		nginx_cpu="0"
+	else
+		nginx_cpu="0-${nginx_end}"
+	fi
+
+	# Находим стартовую точку для h1load
+	# Если ядер меньше 4, старт всегда 4. Если больше — равен числу ядер.
+	h1load_start=$CORES
+	if [ "$CORES" -lt 4 ]; then
+		h1load_start=4
+	fi
+
+	# Находим конечную точку для h1load
+	h1load_end=$((h1load_start + CORES - 1))
+
+	if [ "$h1load_start" -eq "$h1load_end" ]; then
+		h1load_cpu="${h1load_start}"
+	else
+		h1load_cpu="${h1load_start}-${h1load_end}"
+	fi
+
+	  [ -z "${QUIET}" ] && echo "CORES=$CORES -> nginx_cpu=\"$nginx_cpu\" h1load_cpu=\"$h1load_cpu\"" >&2
+	return 0
 }
 
 
