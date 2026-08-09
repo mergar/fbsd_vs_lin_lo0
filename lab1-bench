@@ -61,7 +61,9 @@ run_test()
 
 
 				if [ -z "${QUIET}" ]; then
+					set -o xtrace
 					cpuset -l ${h1load_cpu} h1load -d ${DURATION} -t ${CORES} -c ${concurrent} -r 5000 -P -S -l -A http://127.0.0.1:8080/index.html | tee -a  output/${PLATFORM}-${CORES}.log
+					set +o xtrace
 				else
 					cpuset -l ${h1load_cpu} h1load -d ${DURATION} -t ${CORES} -c ${concurrent} -r 5000 -P -S -l -A http://127.0.0.1:8080/index.html > output/${PLATFORM}-${CORES}.log
 				fi
